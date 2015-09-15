@@ -33,9 +33,25 @@ function generateNewSheet() {
 	var values = range.getValues();
 
 	// convert date to moment object
-	var moment = Moment.moment(values[0][0]);
-	var date = moment.format("YYYY[/]MM[/]DD[（]ddd[）]");
+	var today = Moment.moment();
+	var yesterday = Moment.moment(values[0][0]);
+
+	if (today.isAfter(yesterday, 'day')) {
+		// inset new date
+	}
 
 
-	Logger.log(date);
+	// moment.locale('ja', {
+	// 	weekdays: ["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"],
+	// 	weekdaysShort: ["日","月","火","水","木","金","土"]
+	// });
+
+	// Logger.log(moment.format());
+
+	// var hoge = Moment.moment(values[0][0]);
+
+	// Logger.log(hoge.format());
+
+	// var moment = Moment.moment(values[0][0]);
+	// var date = moment.format("YYYY[/]MM[/]DD[（]ddd[）]");
 }
