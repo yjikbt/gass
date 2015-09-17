@@ -27,31 +27,38 @@ function onOpen() {
 }
 
 function generateNewSheet() {
-	// get today's date
+	// get today's date from a active spreadsheet
 	var sheet = SpreadsheetApp.getActiveSheet();
-	var range = sheet.getRange(2, 1);
-	var values = range.getValues();
+	var cell = sheet.getRange(2, 1);
+	var values = cell.getValues()[0][0];
 
-	// convert date to moment object
+	// generate moment objects
 	var today = Moment.moment();
-	var yesterday = Moment.moment(values[0][0]);
+	var yesterday = Moment.moment(values);
 
+	// compare today's day with yesterday's
 	if (today.isAfter(yesterday, 'day')) {
-		// inset new date
+		// insert a new row
+		sheet.insertRowBefore(2);
+
+		// copy old contents into the new row
+		var rangeToCopy = sheet.getRange(3, 1, 1, sheet.getMaxColumns());
+		rangeToCopy.copyTo(sheet.getRange(2, 1, 1, sheet.getMaxColumns()));
+
+		// clear unneeded contents (leaving the formatting intact)
+		sheet.getRange(2, 3, 1, sheet.getMaxColumns()).clearContent();
+
+		// configure the settings for JPN weekdays
+		today.locale('ja', {
+			weekdaysShort: ["日","月","火","水","木","金","土"]
+		});
+
+		// prepare the date and day of week
+		var date = today.format("YYYY[/]MM[/]DD");
+		var dayOfWeek = today.format("ddd");
+
+		// set values
+		sheet.getRange("A2").setValue(date);
+		sheet.getRange("B2").setValue(dayOfWeek);
 	}
-
-
-	// moment.locale('ja', {
-	// 	weekdays: ["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"],
-	// 	weekdaysShort: ["日","月","火","水","木","金","土"]
-	// });
-
-	// Logger.log(moment.format());
-
-	// var hoge = Moment.moment(values[0][0]);
-
-	// Logger.log(hoge.format());
-
-	// var moment = Moment.moment(values[0][0]);
-	// var date = moment.format("YYYY[/]MM[/]DD[（]ddd[）]");
 }
